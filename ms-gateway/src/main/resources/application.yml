@@ -1,0 +1,25 @@
+server:
+   port: 8765
+eureka:
+   client:
+      service-url:
+         defaultZone: http://localhost:8761/eureka
+spring:
+   application:
+      name: ms-gateway
+   cloud:
+      gateway:
+         discovery:
+            locator:
+               enable: true
+         routes:
+         -  id: cambio
+            uri: lb://ms-cambio
+            predicates:
+            - Path=/cambio/**
+         -  id: book
+            uri: lb://ms-book
+            predicates:
+            - Path=/book/**
+            
+            
