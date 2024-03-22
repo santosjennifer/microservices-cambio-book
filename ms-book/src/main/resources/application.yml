@@ -1,0 +1,24 @@
+server:
+   port: 8100
+spring:
+  application:
+    name: ms-book
+  datasource:
+     url: jdbc:mysql://localhost:3306/book?useTimezone=true&serverTimezone=UTC
+     username: root
+     password: postgres
+     driverClassName: com.mysql.cj.jdbc.Driver
+  jpa:
+     hibernate:
+        ddl_auto: update
+     show-sql: false
+  flyway:
+     url: jdbc:mysql://localhost:3306/
+     schemas: book
+     user: root
+     password: postgres
+  jackson:
+     default-property-inclusion: NON_NULL
+     serialization:
+        fail-on-empty-beans: false
+        
