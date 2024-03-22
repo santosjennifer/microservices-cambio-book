@@ -1,0 +1,20 @@
+server:
+   port: 8000
+
+spring:
+   application:
+      name: ms-cambio
+   datasource:
+     url: jdbc:mysql://localhost:3306/cambio?useTimezone=true&serverTimezone=UTC
+     username: root
+     password: postgres
+     driverClassName: com.mysql.cj.jdbc.Driver
+   jpa:
+     hibernate:
+        ddl_auto: update
+     show-sql: true
+   flyway:
+     url: jdbc:mysql://localhost:3306/
+     schemas: cambio
+     user: root
+     password: postgres
