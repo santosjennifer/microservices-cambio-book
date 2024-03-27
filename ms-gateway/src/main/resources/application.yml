@@ -4,6 +4,8 @@ eureka:
    client:
       service-url:
          defaultZone: http://localhost:8761/eureka
+   instance:
+      preferIpAddress: true
 spring:
    application:
       name: ms-gateway
@@ -21,5 +23,3 @@ spring:
             uri: lb://ms-book
             predicates:
             - Path=/book/**
-            
-            
