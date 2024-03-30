@@ -21,16 +21,21 @@ public class CambioService {
 
 	public Cambio convertCurrency(String amount, String from, String to) {
 		BigDecimal amountValue = new BigDecimal(amount);
-
-		Cambio cambio = repository.findByFromAndTo(from, to);
-
 		String port = environment.getProperty("local.server.port");
-		BigDecimal conversionFactor = cambio.getConversionFactor();
-		BigDecimal convertedValue = conversionFactor.multiply(amountValue);
-		cambio.setConvertedValue(convertedValue.setScale(2, RoundingMode.CEILING));
-		cambio.setEnvironment(port);
-
+		Cambio cambio = repository.findByFromAndTo(from, to);
+		BigDecimal convertedValue = calculateConvertedValue(amountValue, cambio);
+		updateCambioFields(cambio, port, convertedValue);
 		return cambio;
 	}
-	
+
+	protected BigDecimal calculateConvertedValue(BigDecimal amountValue, Cambio cambio) {
+		BigDecimal conversionFactor = cambio.getConversionFactor();
+		return conversionFactor.multiply(amountValue);
+	}
+
+	protected void updateCambioFields(Cambio cambio, String port, BigDecimal convertedValue) {
+		cambio.setConvertedValue(convertedValue.setScale(2, RoundingMode.CEILING));
+		cambio.setEnvironment(port);
+	}
+
 }
