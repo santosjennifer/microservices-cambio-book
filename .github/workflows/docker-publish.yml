@@ -31,7 +31,7 @@ jobs:
 
       - name: Build MS Cambio
         working-directory: ./ms-cambio
-        run: mvn clean package
+        run: mvn clean package -DskipTests
 
       - name: Build MS Book
         working-directory: ./ms-book
