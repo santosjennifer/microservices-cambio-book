@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ExceptionResponse  {
+public class ExceptionResponse {
 
 	private Date timestamp;
 	private String message;

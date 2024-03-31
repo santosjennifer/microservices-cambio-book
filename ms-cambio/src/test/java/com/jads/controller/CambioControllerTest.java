@@ -91,7 +91,7 @@ public class CambioControllerTest {
         String amount = "20";
         String from = "USD";
         String to = "EUR";
-
+        
         when(service.convertCurrency(amount, from, to)).thenThrow(NullPointerException.class);
 
         mockMvc.perform(get(CAMBIO_API, amount, from, to))

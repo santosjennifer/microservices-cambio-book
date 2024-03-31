@@ -31,11 +31,11 @@ public class BookService {
 		return book;
 	}
 
-	private CambioDTO getCambio(Double price, String currency) {
+	protected CambioDTO getCambio(Double price, String currency) {
 		return cambioClient.getCambio(price, "USD", currency);
 	}
 
-	private void updateBookPrice(Book book, CambioDTO cambio) {
+	protected void updateBookPrice(Book book, CambioDTO cambio) {
 		String port = environment.getProperty("local.server.port");
 		book.setEnvironment("Book port " + port + " Cambio port " + cambio.getEnvironment());
 		book.setPrice(cambio.getConvertedValue());

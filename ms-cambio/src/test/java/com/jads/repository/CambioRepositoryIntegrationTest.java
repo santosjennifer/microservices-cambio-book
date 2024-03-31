@@ -39,7 +39,7 @@ public class CambioRepositoryIntegrationTest {
     
     @Test
 	@DisplayName("Deve retornar nulo quando não houver dados para a combinação de moedas")
-    public void testFindByFromAndTo() {
+    public void findByFromAndToWhenNullTest() {
         Cambio foundCambio = repository.findByFromAndTo("USD", "BRL");
 
         assertNull(foundCambio);
