@@ -1,0 +1,155 @@
+version: '3.4'
+
+services:
+   zipkin-server:
+      image: openzipkin/zipkin
+      restart: always
+      ports:
+         - 9411:9411
+      depends_on:
+         - rabbit-mq
+      environment:
+         RABBIT_URI: amqp://guest:guest@rabbit-mq:5672
+      networks:
+         - jads-network
+         
+   rabbit-mq:
+      image: rabbitmq:3.9.29-management
+      ports:
+         - 5672:5672
+         - 15672:15672
+      networks:
+         - jads-network
+         
+   cambio-db:
+      image: mysql:8.3.0
+      command: --default-authentication-plugin=mysql_native_password
+      restart: always
+      environment:
+         TZ: America/Sao_Paulo
+         MYSQL_ROOT_PASSWORD: admin123
+         MYSQL_USER: docker
+         MYSQL_PASSWORD: admin123
+         MYSQL_DATABASE: cambio
+         MYSQL_ROOT_HOST: '%'
+         MYSQL_TCP_PORT: 3308
+      ports:
+         - 3308:3308
+      expose:
+         - 3308
+      networks:
+         - jads-network
+         
+   book-db:
+      image: mysql:8.3.0
+      command: --default-authentication-plugin=mysql_native_password
+      restart: always
+      environment:
+         TZ: America/Sao_Paulo
+         MYSQL_ROOT_PASSWORD: admin123
+         MYSQL_USER: docker
+         MYSQL_PASSWORD: admin123
+         MYSQL_DATABASE: book
+         MYSQL_ROOT_HOST: '%'
+         MYSQL_TCP_PORT: 3310
+      ports:
+         - 3310:3310
+      expose:
+         - 3310
+      networks:
+         - jads-network
+
+   ms-eureka-server:
+      image: santosjennifer/ms-eureka-server:1.0.0-SNAPSHOT
+      ports:
+         - 8761:8761
+      networks:
+         - jads-network
+
+   ms-gateway:
+      image: santosjennifer/ms-gateway:1.0.0-SNAPSHOT
+      ports:
+         - 8765:8765
+      depends_on:
+         - ms-eureka-server
+         - rabbit-mq
+      environment:
+         EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://ms-eureka-server:8761/eureka
+         MANAGEMENT.ZIPKIN.TRACING.ENDPOINT: http://zipkin-server:9411/api/v2/spans
+         MANAGEMENT.TRACING.ENABLED: true
+         MANAGEMENT.TRACING.SAMPLING.PROBABILITY: 1.0
+         MANAGEMENT.TRACING.BAGGAGE.ENABLE: true
+         MANAGEMENT.TRACING.PROPAGATION.TYPE: w3c
+         RABBIT_URI: amqp://guest:guest@rabbit-mq:5672
+         SPRING_RABBITMQ_HOST: rabbit-mq
+         SPRING_ZIPKIN_SENDER_TYPE: rabbit
+      networks:
+         - jads-network
+
+   ms-cambio:
+      image: santosjennifer/ms-cambio
+      restart: always
+      build:
+         context: .
+         dockerfile: ms-cambio/Dockerfile
+      environment:
+         TZ: America/Sao_Paulo
+         EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://ms-eureka-server:8761/eureka
+         MANAGEMENT.ZIPKIN.TRACING.ENDPOINT: http://zipkin-server:9411/api/v2/spans
+         MANAGEMENT.TRACING.ENABLED: true
+         MANAGEMENT.TRACING.SAMPLING.PROBABILITY: 1.0
+         MANAGEMENT.TRACING.BAGGAGE.ENABLE: true
+         MANAGEMENT.TRACING.PROPAGATION.TYPE: w3c
+         RABBIT_URI: amqp://guest:guest@rabbit-mq:5672
+         SPRING_RABBITMQ_HOST: rabbit-mq
+         SPRING_ZIPKIN_SENDER_TYPE: rabbit
+         SPRING.DATASOURCE.URL: jdbc:mysql://cambio-db:3308/cambio?useSSL=false&serverTimezone=UTC&enabledTLSProtocols=TLSv1.2
+         SPRING.DATASOURCE.USERNAME: root
+         SPRING.DATASOURCE.PASSWORD: admin123
+         SPRING.FLYWAY.URL: jdbc:mysql://cambio-db:3308/cambio?useSSL=false&serverTimezone=UTC&enabledTLSProtocols=TLSv1.2
+         SPRING.FLYWAY.USER: root
+         SPRING.FLYWAY.PASSWORD: admin123
+      ports:
+         - 8000:8000
+      depends_on:
+         - ms-eureka-server
+         - cambio-db
+         - rabbit-mq
+      networks:
+         - jads-network
+         
+   ms-book:
+      image: santosjennifer/ms-book
+      restart: always
+      build:
+         context: .
+         dockerfile: ms-book/Dockerfile
+      environment:
+         TZ: America/Sao_Paulo
+         EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://ms-eureka-server:8761/eureka
+         MANAGEMENT.ZIPKIN.TRACING.ENDPOINT: http://zipkin-server:9411/api/v2/spans
+         MANAGEMENT.TRACING.ENABLED: true
+         MANAGEMENT.TRACING.SAMPLING.PROBABILITY: 1.0
+         MANAGEMENT.TRACING.BAGGAGE.ENABLE: true
+         MANAGEMENT.TRACING.PROPAGATION.TYPE: w3c
+         RABBIT_URI: amqp://guest:guest@rabbit-mq:5672
+         SPRING_RABBITMQ_HOST: rabbit-mq
+         SPRING_ZIPKIN_SENDER_TYPE: rabbit
+         SPRING.DATASOURCE.URL: jdbc:mysql://book-db:3310/book?useSSL=false&serverTimezone=UTC&enabledTLSProtocols=TLSv1.2
+         SPRING.DATASOURCE.USERNAME: root
+         SPRING.DATASOURCE.PASSWORD: admin123
+         SPRING.FLYWAY.URL: jdbc:mysql://book-db:3310/book?useSSL=false&serverTimezone=UTC&enabledTLSProtocols=TLSv1.2
+         SPRING.FLYWAY.USER: root
+         SPRING.FLYWAY.PASSWORD: admin123
+      ports:
+         - 8100:8100
+      depends_on:
+         - ms-eureka-server
+         - book-db
+         - rabbit-mq
+      networks:
+         - jads-network
+         
+networks:
+   jads-network:
+      driver: bridge
