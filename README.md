@@ -1,3 +1,7 @@
+![Last Commit](https://img.shields.io/github/last-commit/santosjennifer/rest-microservice)
+[![Continuous Integration with Github](https://github.com/santosjennifer/rest-microservice/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/santosjennifer/rest-microservice/actions/workflows/docker-publish.yml)
+
+
 ### Repositório com os microserviços ms-eureka-server, ms-gateway, ms-cambio e ms-book.
 
 - **ms-eureka-server:** responsável por registrar e gerenciar a comunicação dos demais microserviços (ms-gateway, ms-cambio e ms-book).
