@@ -35,7 +35,7 @@ jobs:
 
       - name: Build MS Book
         working-directory: ./ms-book
-        run: mvn clean package -DskipTests
+        run: mvn clean package
         
       - name: Docker Compose Build
         working-directory: ./
