@@ -1,0 +1,12 @@
+spring:
+   config:
+      activate:
+         on-profile: test
+   flyway:
+      enabled: false
+   datasource:
+      url: jdbc:h2:mem:cambio
+      username: test
+      password: test
+      driverClassName: org.h2.Driver
+
