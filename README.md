@@ -1,5 +1,5 @@
-![Last Commit](https://img.shields.io/github/last-commit/santosjennifer/rest-microservice)
-[![Continuous Integration with Github](https://github.com/santosjennifer/rest-microservice/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/santosjennifer/rest-microservice/actions/workflows/docker-publish.yml)
+![Last Commit](https://img.shields.io/github/last-commit/santosjennifer/microservices-cambio-book)
+[![Continuous Integration with Github](https://github.com/santosjennifer/microservices-cambio-book/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/santosjennifer/microservices-cambio-book/actions/workflows/docker-publish.yml)
 
 
 ### Repositório com os microserviços ms-eureka-server, ms-gateway, ms-cambio e ms-book.
