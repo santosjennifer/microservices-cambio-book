@@ -16,11 +16,6 @@
 - Maven
 - Spring Boot 3.2.3
 
-### Instalação:
-
-Clone o repositório, importe os projetos e inicie os microserviços na IDE:
-> Recomendo o uso do Eclipse.
-
 ### Swagger
 
 - ms-cambio - [Swagger local](http://localhost:8000/swagger-ui/index.html):
