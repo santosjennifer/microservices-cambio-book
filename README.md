@@ -15,6 +15,10 @@
 - Java 21
 - Maven
 - Spring Boot 3.2.3
+- RabbitMQ
+- MySQL
+- Zipkin
+- Docker
 
 ### Swagger
 
