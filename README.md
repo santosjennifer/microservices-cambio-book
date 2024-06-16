@@ -1,6 +1,9 @@
 ![Last Commit](https://img.shields.io/github/last-commit/santosjennifer/microservices-cambio-book)
 [![Continuous Integration with Github](https://github.com/santosjennifer/microservices-cambio-book/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/santosjennifer/microservices-cambio-book/actions/workflows/docker-publish.yml)
 
+## Sistema para controle de venda de livros
+Responsável por retornar o valor de venda de livros de acordo com a moeda (câmbio) desejada.
+
 ### Repositório com os microserviços ms-eureka-server, ms-gateway, ms-cambio e ms-book.
 
 - **ms-eureka-server:** responsável por registrar e gerenciar a comunicação dos demais microserviços (ms-gateway, ms-cambio e ms-book).
