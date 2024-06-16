@@ -1,14 +1,12 @@
 ![Last Commit](https://img.shields.io/github/last-commit/santosjennifer/microservices-cambio-book)
 [![Continuous Integration with Github](https://github.com/santosjennifer/microservices-cambio-book/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/santosjennifer/microservices-cambio-book/actions/workflows/docker-publish.yml)
 
-
 ### Repositório com os microserviços ms-eureka-server, ms-gateway, ms-cambio e ms-book.
 
 - **ms-eureka-server:** responsável por registrar e gerenciar a comunicação dos demais microserviços (ms-gateway, ms-cambio e ms-book).
 - **ms-gateway:** responsável gerenciar as rotas do API Gateway.
 - **ms-cambio:** responsável por retornar o valor do cambio de acordo com a moeda.
 - **ms-book:** responsável por retornar os dados de um livro e seu valor retornando pelo cambio.
-
 
 ### Tecnologia
 
@@ -17,15 +15,34 @@
 - Spring Boot 3.2.3
 - RabbitMQ
 - MySQL
+- Flyway
 - Zipkin
 - Docker
 
-### Swagger
+### Como executar o projeto:
 
-- ms-cambio - [Swagger local](http://localhost:8000/swagger-ui/index.html):
+1. Clone o repositório:
+```
+git clone git@github.com:santosjennifer/microservices-cambio-book.git
+```
+
+2. Na raiz do projeto, execute o comando:
+```
+docker-compose up
+```
+
+3. Acesse o Swagger da aplicação:
+
+- **ms-cambio:**
+```
+http://localhost:8000/swagger-ui/index.html
+```
 ![image](https://github.com/santosjennifer/rest-microservice/assets/90192611/c98b55b4-ad97-4410-ace5-e407cfd1b54b)
 
-- ms-book - [Swagger local](http://localhost:8100/swagger-ui/index.html):
+- **ms-book:**
+```
+http://localhost:8100/swagger-ui/index.html
+```
 ![image](https://github.com/santosjennifer/rest-microservice/assets/90192611/b54bb04b-ccda-4752-a25d-fa9f1ef2ebcf)
 
 ### API
