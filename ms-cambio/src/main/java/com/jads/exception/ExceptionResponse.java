@@ -18,24 +18,12 @@ public class ExceptionResponse {
 		return timestamp;
 	}
 
-	public void setTimestamp(Date timestamp) {
-		this.timestamp = timestamp;
-	}
-
 	public String getMessage() {
 		return message;
 	}
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
 	public String getDebug() {
 		return debug;
-	}
-
-	public void setDebug(String debug) {
-		this.debug = debug;
 	}
 
 }

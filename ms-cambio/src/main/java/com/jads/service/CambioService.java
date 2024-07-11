@@ -1,9 +1,9 @@
 package com.jads.service;
 
-import com.jads.model.Cambio;
+import com.jads.dto.CambioDto;
 
 public interface CambioService {
 	
-	Cambio convertCurrency(String amount, String from, String to);
+	CambioDto convertCurrency(String amount, String from, String to);
 	
 }

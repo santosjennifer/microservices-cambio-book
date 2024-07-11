@@ -3,10 +3,12 @@ package com.jads.service.impl;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import com.jads.dto.CambioDto;
 import com.jads.model.Cambio;
 import com.jads.repository.CambioRepository;
 import com.jads.service.CambioService;
@@ -20,14 +22,22 @@ public class CambioServiceImpl implements CambioService {
 	@Autowired
 	private CambioRepository repository;
 
+	@Autowired
+	private ModelMapper modelMapper;
+
 	@Override
-	public Cambio convertCurrency(String amount, String from, String to) {
+	public CambioDto convertCurrency(String amount, String from, String to) {
 		BigDecimal amountValue = new BigDecimal(amount);
 		String port = environment.getProperty("local.server.port");
+
 		Cambio cambio = repository.findByFromAndTo(from, to);
+
+		CambioDto cambioDto = modelMapper.map(cambio, CambioDto.class);
+
 		BigDecimal convertedValue = calculateConvertedValue(amountValue, cambio);
-		updateCambioFields(cambio, port, convertedValue);
-		return cambio;
+		updateCambioFields(cambioDto, port, convertedValue);
+
+		return cambioDto;
 	}
 
 	protected BigDecimal calculateConvertedValue(BigDecimal amountValue, Cambio cambio) {
@@ -35,9 +45,9 @@ public class CambioServiceImpl implements CambioService {
 		return conversionFactor.multiply(amountValue);
 	}
 
-	protected void updateCambioFields(Cambio cambio, String port, BigDecimal convertedValue) {
-		cambio.setConvertedValue(convertedValue.setScale(2, RoundingMode.CEILING));
-		cambio.setEnvironment(port);
+	protected void updateCambioFields(CambioDto cambioDto, String port, BigDecimal convertedValue) {
+		cambioDto.setConvertedValue(convertedValue.setScale(2, RoundingMode.CEILING));
+		cambioDto.setEnvironment(port);
 	}
 
 }

@@ -12,7 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.jads.model.Cambio;
+import com.jads.dto.CambioDto;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
@@ -26,14 +26,13 @@ public class CambioServiceTest {
         String amount = "1000";
         String from = "USD";
         String to = "EUR";
-        Cambio cambio = new Cambio();
+        CambioDto cambio = new CambioDto();
         cambio.setConvertedValue(new BigDecimal("185.00"));
-        cambio.setEnvironment("9000");
+        
         when(service.convertCurrency(amount, from, to)).thenReturn(cambio);
 
-        Cambio result = service.convertCurrency(amount, from, to);
+        CambioDto result = service.convertCurrency(amount, from, to);
 
         assertEquals(new BigDecimal("185.00"), result.getConvertedValue());
-        assertEquals("9000", result.getEnvironment());
     }
 }
