@@ -26,6 +26,13 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 
 		return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
 	}
+	
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ResponseEntity<ExceptionResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
+		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), "Moeda inválida.", ex.getMessage());
+
+		return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+	}
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ExceptionResponse> handleCustomException(Exception ex) {

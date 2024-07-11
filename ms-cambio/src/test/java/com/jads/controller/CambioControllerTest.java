@@ -21,7 +21,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.jads.model.Cambio;
+import com.jads.dto.CambioDto;
 import com.jads.service.CambioService;
 
 @ExtendWith(SpringExtension.class)
@@ -46,16 +46,16 @@ public class CambioControllerTest {
     }
 
     @Test
-    @DisplayName("Deve retornar objeto Cambio esperado ao chamar getCambio com parâmetros válidos")
+    @DisplayName("Deve retornar objeto do cambio esperado ao chamar getCambio com parâmetros válidos")
     public void getObjectCambioTest() {
         String amount = "100";
         String from = "USD";
         String to = "BRL";
 
-        Cambio cambio  = new Cambio();
+        CambioDto cambio  = new CambioDto();
         when(service.convertCurrency(amount, from, to)).thenReturn(cambio);
 
-        Cambio result = controller.getCambio(amount, from, to);
+        CambioDto result = controller.getCambio(amount, from, to);
 
         assertEquals(cambio, result);
     }
@@ -70,7 +70,7 @@ public class CambioControllerTest {
         BigDecimal value = new BigDecimal(100.0);
         String env = "9000";
 
-        Cambio cambio = new Cambio(id, from, to, value, value, env);
+        CambioDto cambio = new CambioDto(id, from, to, value, value, env);
         
         when(service.convertCurrency(amount, from, to)).thenReturn(cambio);
 
@@ -87,7 +87,7 @@ public class CambioControllerTest {
     
     @Test
     @DisplayName("Deve retornar mensagem tratada ao ocorrer NullPointerException")
-    public void getMessageWhenReturnNullPointerExceptioTest() throws Exception {
+    public void getMessageWhenReturnNullPointerExceptionTest() throws Exception {
         String amount = "20";
         String from = "USD";
         String to = "EUR";
@@ -132,6 +132,23 @@ public class CambioControllerTest {
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("timestamp").isNotEmpty())
                 .andExpect(jsonPath("message").value("Ocorreu um erro."))
+                .andExpect(jsonPath("debug").hasJsonPath())
+                .andReturn();
+    }
+    
+    @Test
+    @DisplayName("Deve retornar mensagem tratada ao ocorrer IllegalArgumentException")
+    public void getMessageWhenReturnIllegalArgumentExceptionTest() throws Exception {
+        String amount = "20";
+        String from = "USD";
+        String to = "EUR";
+        
+        when(service.convertCurrency(amount, from, to)).thenThrow(IllegalArgumentException.class);
+
+        mockMvc.perform(get(CAMBIO_API, amount, from, to))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("timestamp").isNotEmpty())
+                .andExpect(jsonPath("message").value("Moeda inválida."))
                 .andExpect(jsonPath("debug").hasJsonPath())
                 .andReturn();
     }

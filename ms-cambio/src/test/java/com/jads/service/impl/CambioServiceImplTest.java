@@ -12,10 +12,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.modelmapper.ModelMapper;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import com.jads.dto.CambioDto;
 import com.jads.model.Cambio;
 import com.jads.repository.CambioRepository;
 
@@ -28,6 +30,9 @@ public class CambioServiceImplTest {
 
     @Mock
     private CambioRepository repository;
+    
+    @Mock
+    private ModelMapper modelMapper;
 
     @InjectMocks
     private CambioServiceImpl service;
@@ -44,10 +49,14 @@ public class CambioServiceImplTest {
         cambio.setFrom("USD");
         cambio.setTo("EUR");
         cambio.setConversionFactor(new BigDecimal("0.85"));
+        
+        CambioDto cambioDto = new CambioDto();
+        
         when(repository.findByFromAndTo("USD", "EUR")).thenReturn(cambio);
         when(environment.getProperty("local.server.port")).thenReturn("8080");
+        when(modelMapper.map(cambio, CambioDto.class)).thenReturn(cambioDto);
         
-        Cambio result = service.convertCurrency("100", "USD", "EUR");
+        CambioDto result = service.convertCurrency("100", "USD", "EUR");
 
         assertEquals(new BigDecimal("85.00"), result.getConvertedValue());
         assertEquals("8080", result.getEnvironment());
@@ -67,7 +76,7 @@ public class CambioServiceImplTest {
     @Test
     @DisplayName("Deve validar a atualização dos campos port e convertedValue")
     public void updateCambioFieldsTest() {
-        Cambio cambio = new Cambio();
+    	CambioDto cambio = new CambioDto();
 
         service.updateCambioFields(cambio, "8080", new BigDecimal("85.00"));
 
