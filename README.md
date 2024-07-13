@@ -15,10 +15,11 @@ Responsável por retornar o valor de venda de livros de acordo com a moeda (câm
 
 - Java 21
 - Maven
-- Spring Boot 3.2.3
+- Spring Boot 3.2.5
 - RabbitMQ
 - MySQL
 - Flyway
+- Resilience4j
 - Zipkin
 - Docker
 
