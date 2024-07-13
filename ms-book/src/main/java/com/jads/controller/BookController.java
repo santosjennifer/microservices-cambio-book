@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jads.model.Book;
+import com.jads.dto.BookDto;
 import com.jads.service.BookService;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
@@ -23,9 +23,9 @@ public class BookController {
 	private BookService service;
 
 	@GetMapping("/{id}/{currency}")
-	public Book findBook(
+	public BookDto findBook(
 			@PathVariable("id") String id, 
-			@PathVariable("currency") String currency) throws Exception {
+			@PathVariable("currency") String currency) {
 		
 		return service.calculatePrice(id, currency);
 	}

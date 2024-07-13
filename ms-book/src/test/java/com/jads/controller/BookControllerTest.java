@@ -21,11 +21,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.jads.model.Book;
+import com.jads.dto.BookDto;
+import com.jads.exception.BookNotFoundException;
 import com.jads.service.BookService;
 
 import feign.FeignException;
-import jakarta.persistence.EntityNotFoundException;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
@@ -49,22 +49,22 @@ public class BookControllerTest {
     }
 
 	@Test
-	@DisplayName("Deve validar o retorno do book")
-	public void getObjectBookTest() throws Exception {
+	@DisplayName("Deve validar o retorno do livro")
+	public void getObjectBookTest() {
 		String id = "1";
 		String currency = "BRL";
 		
-		Book book = new Book();
+		BookDto book = new BookDto();
 		
 		when(service.calculatePrice(id, currency)).thenReturn(book);
 
-        Book result = controller.findBook(id, currency);
+        BookDto result = controller.findBook(id, currency);
 
         assertEquals(book, result);
 	}
 	
     @Test
-    @DisplayName("Deve retornar sucesso ao chamar o endpoint /book")
+    @DisplayName("Deve retornar sucesso ao chamar o endpoint book")
     public void getJsonResopnseCambioTest() throws Exception {
 		String id = "1";
 		String currency = "BRL";
@@ -74,7 +74,7 @@ public class BookControllerTest {
 		Double price = 59.90;
 		String env = "8001";
 
-		Book book = new Book(Long.parseLong(id), title, author, launchDate, price, currency, env);
+		BookDto book = new BookDto(Long.parseLong(id), title, author, launchDate, price, currency, env);
 		
 		when(service.calculatePrice(id, currency)).thenReturn(book);
 
@@ -92,21 +92,21 @@ public class BookControllerTest {
     
     @Test
     @DisplayName("Deve retornar mensagem de erro quando não encontrar o livro com o id informado")
-    public void getMessageWhenReturnEntityNotFoundExceptionTest() throws Exception {
+    public void getMessageWhenReturnBookNotFoundExceptionTest() throws Exception {
 		String id = "33";
 		String currency = "EUR";
 		
-		when(service.calculatePrice(id, currency)).thenThrow(EntityNotFoundException.class);
+		when(service.calculatePrice(id, currency)).thenThrow(BookNotFoundException.class);
 
         mockMvc.perform(get(BOOK_API, id, currency))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("timestamp").isNotEmpty())
-                .andExpect(jsonPath("message").value("Livro não encontrato."))
+                .andExpect(jsonPath("message").value("Registro não encontrado."))
                 .andReturn();
     }
     
     @Test
-    @DisplayName("Deve retornar mensagem de erro quando o ms de cambio retornar erro")
+    @DisplayName("Deve retornar mensagem de erro quando o serviço de cambio retornar erro")
     public void getMessageWhenReturnFeignExceptionBadRequestTest() throws Exception {
 		String id = "1";
 		String currency = "EU";
@@ -121,7 +121,7 @@ public class BookControllerTest {
     }
     
     @Test
-    @DisplayName("Deve retornar mensagem de erro quando o ms de cambio estiver indisponível")
+    @DisplayName("Deve retornar mensagem de erro quando o serviço de cambio estiver indisponível")
     public void getMessageWhenReturnServiceUnavailableTest() throws Exception {
 		String id = "1";
 		String currency = "BRL";
@@ -136,7 +136,7 @@ public class BookControllerTest {
     }
     
     @Test
-    @DisplayName("Deve lançar mensagem de erro quando ocorrer uma exceção genérica")
+    @DisplayName("Deve lançar mensagem de erro quando ocorrer uma exceção")
     public void getMessageWhenReturnRuntimeExceptioneTest() throws Exception {
 		String id = "1";
 		String currency = "BRL";
@@ -144,7 +144,7 @@ public class BookControllerTest {
 		when(service.calculatePrice(id, currency)).thenThrow(RuntimeException.class);
 		
         mockMvc.perform(get(BOOK_API, id, currency))
-                .andExpect(status().isInternalServerError())
+                .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("timestamp").isNotEmpty())
                 .andExpect(jsonPath("message").value("Ocorreu um erro."))
                 .andReturn();
