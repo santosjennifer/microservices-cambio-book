@@ -3,6 +3,7 @@ version: '3.4'
 services:
    zipkin-server:
       image: openzipkin/zipkin
+      container_name: zipkin-server
       restart: always
       ports:
          - 9411:9411
@@ -15,6 +16,7 @@ services:
          
    rabbit-mq:
       image: rabbitmq:3.9.29-management
+      container_name: rabbit-mq
       ports:
          - 5672:5672
          - 15672:15672
@@ -23,6 +25,7 @@ services:
          
    cambio-db:
       image: mysql:8.3.0
+      container_name: cambio-db
       command: --default-authentication-plugin=mysql_native_password
       restart: always
       environment:
@@ -42,6 +45,7 @@ services:
          
    book-db:
       image: mysql:8.3.0
+      container_name: book-db
       command: --default-authentication-plugin=mysql_native_password
       restart: always
       environment:
@@ -60,14 +64,16 @@ services:
          - jads-network
 
    ms-eureka-server:
-      image: santosjennifer/ms-eureka-server:1.0.0-SNAPSHOT
+      image: santosjennifer/ms-eureka-server
+      container_name: ms-eureka-server
       ports:
          - 8761:8761
       networks:
          - jads-network
 
    ms-gateway:
-      image: santosjennifer/ms-gateway:1.0.0-SNAPSHOT
+      image: santosjennifer/ms-gateway
+      container_name: ms-gateway
       ports:
          - 8765:8765
       depends_on:
@@ -88,6 +94,7 @@ services:
 
    ms-cambio:
       image: santosjennifer/ms-cambio
+      container_name: ms-cambio
       restart: always
       build:
          context: .
@@ -120,6 +127,7 @@ services:
          
    ms-book:
       image: santosjennifer/ms-book
+      container_name: ms-book
       restart: always
       build:
          context: .
